@@ -11,7 +11,7 @@ def lossFunction(self, y_true, y_pred):
 	return np.mean(np.square(y_true - y_pred))
 
 def readData(file):
-	with open('mnist.pkl', 'rb') as f:
+	with open(file, 'rb') as f:
 		mnist_data = pickle.load(f, encoding='latin1')
 		
 	return mnist_data
