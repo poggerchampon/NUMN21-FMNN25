@@ -7,7 +7,7 @@ def sigmoid(x):
 def sigmoid_derivative(x):
 	return sigmoid(x) * (1 - sigmoid(x))
 
-def lossFunction(self, y_true, y_pred):
+def lossFunction(y_true, y_pred):
 	return np.mean(np.square(y_true - y_pred))
 
 def readData(file):
