@@ -13,7 +13,7 @@ def main():
 	learning_rate = 0.1
 	
 	# Initialise network
-	ns = FeedForwardNeuralNetwork(input_size, hidden_size, output_size)
+	nn = FeedForwardNeuralNetwork(input_size, hidden_size, output_size)
 	
 	# Load data
 	train_X, train_y = load_training_data('mnist.pkl')
@@ -21,10 +21,10 @@ def main():
 	val_X, val_y = load_validation_data('mnist.pkl')
 	
 	print("Training the network...")
-	ns.train(train_X, train_y, val_X, val_y, epochs, mini_batch_size, learning_rate)
+	nn.train(train_X, train_y, val_X, val_y, epochs, mini_batch_size, learning_rate)
 	
 	print("Testing the network...")
-	accuracy = ns.test(test_X, test_y)
+	accuracy = nn.test(test_X, test_y)
 	
 	print("Total accuracy after training: ", accuracy)
 	
