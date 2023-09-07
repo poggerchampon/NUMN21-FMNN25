@@ -2,7 +2,7 @@ import numpy as np
 import pickle
 
 def sigmoid(x):
-	return 1 / (1 + np.exp(-x))
+	return 1.0 / (1.0 + np.exp(-x))
 
 def sigmoid_derivative(x):
 	return sigmoid(x) * (1 - sigmoid(x))
@@ -22,9 +22,25 @@ class FeedForwardNeuralNetwork:
 		self.hidden_size = hidden_size
 		self.output_size = output_size
 		
-		#initiate weights...
-				
+	
+
+		#initiate weights
+		# we need two matrices between the zeroth layer and the 
+		# first and the first to second (final layer)
+
+
+		weights0_1 = np.random.randn(input_size,hidden_size)
+		weights1_2 = np.random.randn(hidden_size, output_size)
+
+		self.weights=[weights0_1, weights1_2] # compacting into list 
+
+		
+
+
+
 	def forward_pass(self, x):
+		# input x
+		
 		# Forward pass...
 		return 0
 	
