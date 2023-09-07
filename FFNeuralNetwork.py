@@ -1,22 +1,41 @@
 import numpy as np
 
 def sigmoid(x):
-	return 1.0 / (1.0 + np.exp(-x))
+	return 1 / (1 + np.exp(-x))
 
 def sigmoid_derivative(x):
 	return sigmoid(x) * (1 - sigmoid(x))
 	
 class FeedForwardNeuralNetwork:
 	def __init__(self, input_size, hidden_size, output_size):
+		
 		# Initialise weights and biases
 		self.W1 = np.random.randn(input_size, hidden_size)
 		self.b1 = np.zeros((1, hidden_size))
 		
-		#initiate weights...
-				
-	def forward_pass(self, x):
-		# Forward pass...
-		return 0
+		self.W2 = np.random.randn(hidden_size, output_size)
+		self.b2 = np.zeros((1, output_size))
+
+	# The mean squared error function
+	def lossFunction(self, y_true, y_pred):
+		return np.mean(np.square(y_true - y_pred))
+	
+	# returns the loss using mean squared 
+	def calculate_loss(self, X, Y):
+		output = self.forward_pass(X)
+		loss = self.lossFunction(Y, output)
+		return loss
+	
+	def forward_pass(self, X):
+		# Forward pass, just go through the layers multiplying the weights + adding bias
+		# Return the final output self.a2
+		
+		self.z1 = X.dot(self.W1) + self.b1
+		self.a1 = sigmoid(self.z1)
+		
+		self.z2 = self.a1.dot(self.W2) + self.b2
+		self.a2 = sigmoid(self.z2)
+		return self.a2
 	
 	def backward_pass(self, X, Y, learning_rate):
 		m = X.shape[0]
