@@ -1,6 +1,4 @@
-from data_loader import load_training_data
-from data_loader import load_test_data
-from data_loader import load_validation_data
+from data_loader import load_data
 from FFNeuralNetwork import FeedForwardNeuralNetwork
 
 def main():
@@ -8,7 +6,7 @@ def main():
 	input_size = 784
 	hidden_size = 30
 	output_size = 10
-	epochs = 20
+	epochs = 15
 	mini_batch_size = 30
 	learning_rate = 0.1
 	
@@ -16,9 +14,9 @@ def main():
 	nn = FeedForwardNeuralNetwork(input_size, hidden_size, output_size)
 	
 	# Load data
-	train_X, train_y = load_training_data('mnist.pkl')
-	test_X, test_y = load_test_data('mnist.pkl')
-	val_X, val_y = load_validation_data('mnist.pkl')
+	train_X, train_y = load_data('mnist.pkl', 'train')
+	test_X, test_y = load_data('mnist.pkl', 'test')
+	val_X, val_y = load_data('mnist.pkl', 'validation')
 	
 	print("Training the network...")
 	nn.train(train_X, train_y, val_X, val_y, epochs, mini_batch_size, learning_rate)
