@@ -1,43 +1,33 @@
 import pickle
 import numpy as np
 
-def load_training_data(file_name):
-	with open(file_name, 'rb') as f:
-		file_content = pickle.load(f, encoding='latin1')
+# Returns the images and labels for the type: 'data:type'
+def load_data(file_name: str, data_type: str):
+	# Attempt data read from specified data file
+	try:
+		with open(file_name, 'rb') as f:
+			file_content = pickle.load(f, encoding='latin1')
+	except (FileNotFoundError, pickle.PickleError):
+		print(f"An error occured when opening the file: {file_name}")
+		return None, None
 	
-	# Unpack data
-	train_data, validation_data, test_data = file_content
-	train_X, train_y = train_data
+	# Handle the 3 data types
+	# Convert Train & Val to one hot vectors (for calculating loss gradient)
+	if data_type == 'train':
+		X, y = file_content[0]
+		y = convert_to_one_hot(y, 10)
+	elif data_type == 'validation':
+		X, y = file_content[1]
+		y = convert_to_one_hot(y, 10)
+	elif data_type == 'test':
+		X, y = file_content[2]
+	else:
+		print(f"Invalid data type: {data_type}")
+		return None, None
 	
-	# Convert labels to one hot vectors
-	train_y = convert_to_one_hot(train_y, 10)
-	
-	return train_X, train_y
+	return X, y
 
-def load_test_data(file_name):
-	with open(file_name, 'rb') as f:
-		file_content = pickle.load(f, encoding='latin1')
-		
-	# Unpack data
-	train_data, validation_data, test_data = file_content
-	test_X, test_y = test_data
-	
-	return test_X, test_y
-
-def load_validation_data(file_name):
-	with open(file_name, 'rb') as f:
-		file_content = pickle.load(f, encoding='latin1')
-		
-	# Unpack data
-	train_data, validation_data, test_data = file_content
-	val_X, val_y = validation_data
-	
-	# Convert labels to one hot vectors
-	val_y = convert_to_one_hot(val_y, 10)
-	
-	return val_X, val_y
-
-# convert labels to one hot vectors, e.g 2 becomes [0 0 1 0 0 0 0 0 0 0]
+# Convert labels to one hot vectors, e.g 2 becomes [0 0 1 0 0 0 0 0 0 0]
 def convert_to_one_hot(y, num_classes):
 	one_hot = np.zeros((y.shape[0], num_classes))
 	one_hot[np.arange(y.shape[0]), y] = 1
