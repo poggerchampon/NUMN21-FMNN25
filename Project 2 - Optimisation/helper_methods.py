@@ -16,7 +16,7 @@ def numerical_hessian(self, x, h=1e-5):
     hessian=np.zeros((dim,dim))
     identity_matrix=np.diag(np.ones(dim))
 
-    for iy in range(0,dim-1):
+    for i in range(0,dim-1):
         for j in range(0,dim-1):
         
             hessian[i][j]=(self.evaluate(x+h*identity_matrix[i])+self.evaluate(x+h*identity_matrix[j])-2*self.evaluate(x))/h**2
