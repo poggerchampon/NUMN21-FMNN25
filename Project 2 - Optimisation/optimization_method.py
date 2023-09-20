@@ -33,20 +33,21 @@ class ClassicalNewtonMethod(OptimizationMethod):
 	def solve(self):
 
 		import numpy as np
-		import helper_methods 
-
-		number_input_parameters=len(self.inspect.signature(self.objective_func))
+		
+		number_input_parameters=self.opt_problem.get_num_of_paramaters()
 		
 		point=np.zeros(number_input_parameters)		#starting at 0
 		
 		
 
 		for i in range(0,self.max_iterations-1):
-			invhessian=helper_methods.inv_numerical_hessian(self,point)
-			gradient=helper_methods.numerical_gradient(self,point)
+			invhessian=inv_numerical_hessian(self,point)
+			gradient=numerical_gradient(self,point)
 			point[i+1]=point[i]-invhessian.dot(gradient)
+			if point[i+1]-point[i]<self.tolerance:
+				break
 
-
+		return point
 
 		print(f"Solving using Quasi-Newton Method X with params {self.param1}, {self.param2}")
 		# lots of math...
