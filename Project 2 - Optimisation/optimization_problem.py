@@ -41,8 +41,14 @@ class OptimizationProblem:
 			# Invalid method choice
 			else:
 				raise ValueError("Invalid method. Use either 'tf' or 'numerical'")
-		
-		
+
+	# Returns the function of the optimisation problem
+	def get_function(self):
+		return self.objective_func
+	
+	# Returns the num of paramaters for the function
+	def get_num_of_parameters(self):
+		return len(self.inspect.signature(self.objective_func))
 		
 # ------------------- Optional additions ------------------------
 			
