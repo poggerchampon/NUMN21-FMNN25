@@ -12,7 +12,10 @@ class OptimizationMethod:
 		
 	def solve(self):
 		raise NotImplementedError("The solve method should be implemented by derived classes")
-	
+
+	# Method to validate paramaters
+	def validate_params(self):
+		pass # implemented by derived classes
 	
 #------------- Derived Quasi Newton Methods -----------------------
 	
@@ -60,14 +63,22 @@ class ClassicalNewtonMethod(OptimizationMethod):
 		# lots of math...
 
 class NewtonExactLineSeach(OptimizationMethod):
-
-	def __init__(self, opt_problem, h=1e-5, tolerance=1e-5):
+	def __init__(self, opt_problem, h=1e-5, tolerance=1e-5, max_iterations=1000):
 		super().__init__(opt_problem)
 		self.h = h
 		self.tolerance = tolerance
+		self.max_iterations = max_iterations
+		
+	def exact_line_search(self, x, direction):
+		# To do
+		return 0
 		
 	def solve(self):
-		starting_point = self.opt_problem.get_num_of_paramaters()
+		# Check paramaters
+		self.validate_params()
+		
+		# Start with zeros
+		x = np.zeros(self.opt_problem.get_num_of_paramaters())
 		iteration = 0
 		
 		while True:
@@ -76,4 +87,34 @@ class NewtonExactLineSeach(OptimizationMethod):
 			
 			# Stopping criteria
 			if np.linalg.norm(current_gradient) < self.tolerance:
-				break
+				print(f"Converged in {iteration} iterations")
+				return x
+			
+			if iteration >= self.max_iterations:
+				print("Maximum iterations reached.")
+				return x
+			
+			# Compute approximate Hessian
+			H = numerical_hessian(x)
+		
+			# Make symmetric if necessary
+			G = 0.5 * (H + H.T)
+			
+			# Newton's direction
+			direction = -np.dot(np.linalg.inv(G), current_gradient)
+		
+			# Do exact line search to find the optimal step size
+			alpha = self.exact_line_search(x, direction)
+			
+			# Update the current point
+			x += alpha * direction
+			
+			iteration += 1
+		
+		# Minimum found
+		return x
+			
+	# Check that parameters are greater than zero
+	def validate_params(self):
+		if self.h <= 0 and tolerance <= 0:
+			raise ValueError("Paramaters should be greater than zero")
