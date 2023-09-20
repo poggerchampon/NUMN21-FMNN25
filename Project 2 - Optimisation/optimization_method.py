@@ -116,5 +116,5 @@ class NewtonExactLineSeach(OptimizationMethod):
 			
 	# Check that parameters are greater than zero
 	def validate_params(self):
-		if self.h <= 0 and tolerance <= 0:
+		if self.h <= 0 and self.tolerance <= 0:
 			raise ValueError("Paramaters should be greater than zero")

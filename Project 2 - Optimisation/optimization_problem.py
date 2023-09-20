@@ -3,6 +3,8 @@ import numpy as np
 import importlib.util
 import inspect
 
+from helper_methods import numerical_gradient
+
 def is_tensorflow_installed():
 	try:
 		import tensorflow as tf
