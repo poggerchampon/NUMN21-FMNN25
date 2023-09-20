@@ -2,6 +2,9 @@ from helper_methods import numerical_hessian
 from helper_methods import numerical_gradient
 from helper_methods import inv_numerical_hessian
 
+import inspect
+import numpy as np
+
 # Super class for optimization method
 class OptimizationMethod:
 	def __init__(self, opt_problem):
