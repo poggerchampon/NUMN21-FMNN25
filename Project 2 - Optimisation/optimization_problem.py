@@ -1,6 +1,10 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+def is_tensorflow_installed():
+	tensorflow_spec = importlib.util.find_spec('tensorflow')
+	return tensorflow_spec is not None
+
 class OptimizationProblem:
 	# Initiate an objective function with option to specify gradient
 	def __init__(self, objective_func, gradient_func=None):
@@ -21,10 +25,20 @@ class OptimizationProblem:
 		if self.gradient_func:
 			return self.gradient_func(x)
 		else:
-			# Option 1. Numerical gradient computation? (fallback)
-			# Option 2. Raise "NotImplementedError" (boring)
-			# Option 3. Use Pytorch or Tensorflow to compute gradients 
-			raise NotImplementedError("Gradient function is not specified")
+			# Use tensorflow if installed
+			if method == 'tf' and is_tensorflow_installed():
+				x = tf.convert_to_tensor(x, dtype=tf.float32)
+				with tf.GradientTape() as tape:
+					tape.watch(x)
+					y = self.objective_func(x)
+				grads = tape.gradient(y, x)
+				return grads.numpy()
+			# Use central numerical differentiation
+			elif method == 'numerical':
+				return numerical_gradient(x)
+			# Invalid method choice
+			else:
+				raise ValueError("Invalid method. Use either 'tf' or 'numerical'")
 		
 		
 		
