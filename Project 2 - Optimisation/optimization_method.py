@@ -48,15 +48,19 @@ class ClassicalNewtonMethod(OptimizationMethod):
 			gradient=numerical_gradient(self,point)
 			point[i+1]=point[i]-invhessian.dot(gradient)
 			if point[i+1]-point[i]<self.tolerance:
-				break
+				return point[i]
 
-		return point
+		# probably no min found
+
+		return point[-1]
+
+		
 
 		
 		# lots of math...
 
 class NewtonExactLineSeach(OptimizationMethod):
-	
+
 	def __init__(self, opt_problem, h=1e-5, tolerance=1e-5):
 		super().__init__(opt_problem)
 		self.h = h
