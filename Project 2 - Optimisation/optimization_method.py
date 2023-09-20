@@ -1,4 +1,6 @@
 
+
+
 # Super class for optimization method
 class OptimizationMethod:
 	def __init__(self, opt_problem):
@@ -19,6 +21,21 @@ class ClassicalNewtonMethod(OptimizationMethod):
 		self.h = h
 		self.tolerance = tolerance
 		
+		
 	def solve(self):
+
+		import numpy as np
+
+		number_input_parameters=len(self.inspect.signature(self.objective_func))
+		max_iterations=1000
+		starting_point=np.zeros(number_input_parameters)
+
+		
+
+		#for _ in range(0,max_iterations):
+
+			
+
+
 		print(f"Solving using Quasi-Newton Method X with params {self.param1}, {self.param2}")
 		# lots of math...
