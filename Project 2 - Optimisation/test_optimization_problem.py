@@ -25,7 +25,9 @@ class TestOptimizationProblem(unittest.TestCase):
 		opt_problem = OptimizationProblem(lambda x: x**2)
 		with self.assertRaises(NotImplementedError):
 			opt_problem.gradient(3)
-			
+	
+
+
 # Run all unit tests
 if __name__ == "__main__":
 	unittest.main()
