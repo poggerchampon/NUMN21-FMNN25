@@ -25,7 +25,7 @@ class OptimizationProblem:
 		return self.objective_func(x)
 	
 	# Returns the gradient value of the function
-	def gradient(self, x):
+	def gradient(self, x, method='numerical'):
 		if self.gradient_func:
 			return self.gradient_func(x)
 		else:
