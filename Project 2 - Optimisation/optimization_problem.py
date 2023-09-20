@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import importlib.util
+import inspect
 
 def is_tensorflow_installed():
 	try:
