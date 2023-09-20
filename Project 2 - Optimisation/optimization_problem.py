@@ -50,6 +50,18 @@ class OptimizationProblem:
 	def numerical_gradient(self, x, h=1e-5):
 		return (self.evaluate(x + h) - self.evaluate(x - h)) / (2.0 * h)
 	
+	def numerical_hessian(self, x, h=1e-5):
+		
+		dim=len(self.inspect.signature(self.objective_func))
+		hessian=np.zeros((dim,dim))
+		identity_matrix=np.diag(np.ones(dim))
+
+		for i,j in zip(range(0,dim-1),range(0,dim-1)):
+			
+			hessian[i][j]=(self.evaluate(x+h*identity_matrix[i])+self.evaluate(x+h*identity_matrix[j])-2*self.evaluate(x))/h**2
+
+		return hessian
+
 	# Plot function with specified x_range and number of points
 	def plot_objective_2D(self, range_x = None, num_points=100):
 		if range_x is None:
