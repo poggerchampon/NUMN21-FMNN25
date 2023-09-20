@@ -38,7 +38,7 @@ class ClassicalNewtonMethod(OptimizationMethod):
 		
 		point=np.zeros(number_input_parameters)		#starting at 0
 		
-		
+		print(f"Solving using Quasi-Newton Method X with params {self.param1}, {self.param2}")
 
 		for i in range(0,self.max_iterations-1):
 			invhessian=inv_numerical_hessian(self,point)
@@ -49,10 +49,11 @@ class ClassicalNewtonMethod(OptimizationMethod):
 
 		return point
 
-		print(f"Solving using Quasi-Newton Method X with params {self.param1}, {self.param2}")
+		
 		# lots of math...
 
 class NewtonExactLineSeach(OptimizationMethod):
+	
 	def __init__(self, opt_problem, h=1e-5, tolerance=1e-5):
 		super().__init__(opt_problem)
 		self.h = h
