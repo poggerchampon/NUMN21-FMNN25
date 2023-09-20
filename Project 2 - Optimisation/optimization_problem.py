@@ -1,11 +1,13 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import tensorflow as tf
 import importlib.util
 
 def is_tensorflow_installed():
-	tensorflow_spec = importlib.util.find_spec('tensorflow')
-	return tensorflow_spec is not None
+	try:
+		import tensorflow as tf
+		return True
+	except ImportError:
+		return False
 
 class OptimizationProblem:
 	# Initiate an objective function with option to specify gradient
