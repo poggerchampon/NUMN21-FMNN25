@@ -21,7 +21,11 @@ class ClassicalNewtonMethod(OptimizationMethod):
 		self.h = h
 		self.tolerance = tolerance
 		
-		
+		if self.h <= 0:
+			raise ValueError("Invalid parameter. h should be bigger than 0")
+		if self.tolerance <= 0:
+			raise ValueError("Invalid parameter. tolerance should be bigger than 0")
+
 	def solve(self):
 
 		import numpy as np
