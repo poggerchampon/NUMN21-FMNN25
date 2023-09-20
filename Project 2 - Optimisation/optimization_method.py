@@ -1,5 +1,6 @@
-
-
+from helper_methods import numerical_hessian
+from helper_methods import numerical_gradient
+from helper_methods import inv_numerical_hessian
 
 # Super class for optimization method
 class OptimizationMethod:
