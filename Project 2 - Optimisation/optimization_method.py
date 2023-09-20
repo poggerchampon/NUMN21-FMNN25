@@ -40,7 +40,7 @@ class ClassicalNewtonMethod(OptimizationMethod):
 		
 
 		#for _ in range(0,max_iterations):
-		np.linalg.inv(self.)
+		
 			
 
 
