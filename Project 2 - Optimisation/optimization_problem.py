@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import tensorflow as tf
+import importlib.util
 
 def is_tensorflow_installed():
 	tensorflow_spec = importlib.util.find_spec('tensorflow')
