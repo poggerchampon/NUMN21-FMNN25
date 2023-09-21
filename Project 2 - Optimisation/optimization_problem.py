@@ -3,14 +3,13 @@ import numpy as np
 import importlib.util
 import inspect
 
-from helper_methods import numerical_gradient
+try:
+	import tensorflow as tf
+	TF_INSTALLED = True
+except ImportError:
+	TF_INSTALLED = False
 
-def is_tensorflow_installed():
-	try:
-		import tensorflow as tf
-		return True
-	except ImportError:
-		return False
+from helper_methods import numerical_gradient
 
 class OptimizationProblem:
 	# Initiate an objective function with option to specify gradient
@@ -33,7 +32,7 @@ class OptimizationProblem:
 			return self.gradient_func(x)
 		else:
 			# Use tensorflow if installed
-			if method == 'tf' and is_tensorflow_installed():
+			if method == 'tf' and TF_INSTALLED:
 				x = tf.convert_to_tensor(x, dtype=tf.float32)
 				with tf.GradientTape() as tape:
 					tape.watch(x)
@@ -42,7 +41,7 @@ class OptimizationProblem:
 				return grads.numpy()
 			# Use central numerical differentiation
 			elif method == 'numerical':
-				return numerical_gradient(x)
+				return numerical_gradient(self.evaluate, x)
 			# Invalid method choice
 			else:
 				raise ValueError("Invalid method. Use either 'tf' or 'numerical'")
@@ -51,10 +50,10 @@ class OptimizationProblem:
 	def get_function(self):
 		return self.objective_func
 	
+	# Returns the evaluate function
+	def get_evaluate(self):
+		return self.evaluate
+	
 	# Returns the num of paramaters for the function
 	def get_num_of_parameters(self):
-		return len(self.inspect.signature(self.objective_func))
-		
-# ------------------- Optional additions ------------------------
-			
-# moved to helper methods	
+		return len(inspect.signature(self.objective_func).parameters)
