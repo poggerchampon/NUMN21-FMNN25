@@ -29,6 +29,11 @@ class TestOptimizationProblem(unittest.TestCase):
 	def test_gradient_not_provided(self):
 		opt_problem = OptimizationProblem(lambda x: x**2)
 		self.assertAlmostEqual(opt_problem.gradient(3, 'numerical'), 6)
+
+	# Test getting num of parameters for multivariable
+	def test_get_num_of_params(self):
+		opt_problem = OptimizationProblem(lambda x, y, z: x * y + z)
+		self.assertEqual(opt_problem.get_num_of_parameters(), 3)
 			
 # Run all unit tests
 if __name__ == "__main__":
