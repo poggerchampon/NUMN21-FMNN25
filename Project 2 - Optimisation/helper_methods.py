@@ -23,6 +23,31 @@ def numerical_hessian(evaluate_func, x, n, h=1e-5):
 def inv_numerical_hessian(evaluate_func, x, n, h=1e-5):
     return np.linalg.inv(numerical_hessian(evaluate_func, x, n, h))
 
+# numerical_hessian() misses off-diagonal elements, also misses last row because of
+# 'dim-1' in the loop
+def approximate_hessian(evaluate_func, gradient_func, x, n, h=1e-5):
+    hessian = np.zeros((n, n))
+    identity_matrix = np.eye(n)
+    
+    for i in range(n):
+        # Diagonal elements
+        x_i_pos = np.array(x) + h * identity_matrix[i]
+        gradient_i_pos = gradient_func(x_i_pos)
+        
+        hessian[i][i] = (gradient_i_pos[i] - gradient_func(x)[i]) / h
+        
+        # Start from i + 1 to avoid recomputing diagonal, and use symmetry
+        for j in range(i+1, n):
+
+            x_j_pos = np.array(x) + h * identity_matrix[j]
+            gradient_j_pos = gradient_func(x_j_pos)
+                
+            # Take advantage of symmetry to do compute both sides of the matrix
+            hessian[i][j] = (gradient_j_pos[i] - gradient_func(x)[i]) / h
+            hessian[j][i] = hessian[i][j] 
+    
+    return hessian
+
 # Plot function with specified x_range and number of points
 def plot_objective_2D(evaluate_func, range_x = None, num_points=100):
     if range_x is None:
