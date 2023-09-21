@@ -71,9 +71,11 @@ class NewtonExactLineSearch(OptimizationMethod):
 		# To do
 		return x
 		
-	def solve(self):		
+	def solve(self):	
+		n = self.opt_problem.get_num_of_parameters()
+		
 		# Start with zeros
-		x = np.zeros(self.opt_problem.get_num_of_parameters())
+		x = np.zeros(n)
 		iteration = 0
 		
 		while True:
@@ -90,7 +92,7 @@ class NewtonExactLineSearch(OptimizationMethod):
 				return x
 			
 			# Compute approximate Hessian
-			H = numerical_hessian(self.opt_problem.get_evaluate(), x)
+			H = numerical_hessian(self.opt_problem.get_evaluate(), x, n)
 		
 			# Make symmetric if necessary
 			G = 0.5 * (H + H.T)
