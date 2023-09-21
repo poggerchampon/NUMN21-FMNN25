@@ -40,7 +40,7 @@ class ClassicalNewtonMethod(OptimizationMethod):
 
 		import numpy as np
 		
-		number_input_parameters=self.opt_problem.get_num_of_paramaters()
+		number_input_parameters=self.opt_problem.get_num_of_parameters()
 		
 		point=np.zeros(number_input_parameters)		#starting at 0
 		
@@ -57,28 +57,23 @@ class ClassicalNewtonMethod(OptimizationMethod):
 
 		return point[-1]
 
-		
-
-		
-		# lots of math...
-
-class NewtonExactLineSeach(OptimizationMethod):
+class NewtonExactLineSearch(OptimizationMethod):
 	def __init__(self, opt_problem, h=1e-5, tolerance=1e-5, max_iterations=1000):
 		super().__init__(opt_problem)
 		self.h = h
 		self.tolerance = tolerance
 		self.max_iterations = max_iterations
 		
-	def exact_line_search(self, x, direction):
-		# To do
-		return 0
-		
-	def solve(self):
 		# Check paramaters
 		self.validate_params()
 		
+	def exact_line_search(self, x, direction):
+		# To do
+		return x
+		
+	def solve(self):		
 		# Start with zeros
-		x = np.zeros(self.opt_problem.get_num_of_paramaters())
+		x = np.zeros(self.opt_problem.get_num_of_parameters())
 		iteration = 0
 		
 		while True:
@@ -95,7 +90,7 @@ class NewtonExactLineSeach(OptimizationMethod):
 				return x
 			
 			# Compute approximate Hessian
-			H = numerical_hessian(x)
+			H = numerical_hessian(self.opt_problem.get_evaluate(), x)
 		
 			# Make symmetric if necessary
 			G = 0.5 * (H + H.T)
@@ -116,5 +111,5 @@ class NewtonExactLineSeach(OptimizationMethod):
 			
 	# Check that parameters are greater than zero
 	def validate_params(self):
-		if self.h <= 0 and self.tolerance <= 0:
+		if self.h <= 0 or self.tolerance <= 0:
 			raise ValueError("Paramaters should be greater than zero")
