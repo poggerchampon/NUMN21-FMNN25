@@ -19,15 +19,17 @@ class TestOptimizationProblem(unittest.TestCase):
 		
 		opt_problem = OptimizationProblem(lambda x: x**2, quadratic_gradient)
 		self.assertEqual(opt_problem.gradient(3), 6)
+		
+	# Test evaluation gradient of x^2 (tensorflow)
+	def test_gradient_tensorflow(self):
+		opt_problem = OptimizationProblem(lambda x: x**2)
+		self.assertEqual(opt_problem.gradient(3, 'tf'), 6)
 	
-	# Test exception raise for evaluating non specified gradient
+	# Test numerical gradient
 	def test_gradient_not_provided(self):
 		opt_problem = OptimizationProblem(lambda x: x**2)
-		with self.assertRaises(NotImplementedError):
-			opt_problem.gradient(3)
-	
-
-
+		self.assertAlmostEqual(opt_problem.gradient(3, 'numerical'), 6)
+			
 # Run all unit tests
 if __name__ == "__main__":
 	unittest.main()
