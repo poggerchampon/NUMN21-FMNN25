@@ -1,8 +1,5 @@
 from .optimization_method import OptimizationMethod
-from src.functions.helper_methods import approximate_hessian
-from src.functions.helper_methods import numerical_hessian
-from src.functions.helper_methods import numerical_gradient
-from src.functions.helper_methods import inv_numerical_hessian
+from src.functions import approximate_hessian, numerical_hessian, numerical_gradient, inv_numerical_hessian
 
 import numpy as np
 
