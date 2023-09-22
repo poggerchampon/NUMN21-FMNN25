@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from src.functions.helper_methods import approximate_hessian
+from src.functions import approximate_hessian
 from src.optimization_problem import OptimizationProblem
 
 class TestApproximateHessian(unittest.TestCase):
