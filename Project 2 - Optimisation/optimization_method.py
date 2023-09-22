@@ -68,6 +68,7 @@ class NewtonExactLineSearch(OptimizationMethod):
 		self.h = h
 		self.tolerance = tolerance
 		self.max_iterations = max_iterations
+		self.path = [] # Initiate an empty list to store the optimisation path
 		
 		# Check paramaters
 		self.validate_params()
@@ -119,8 +120,9 @@ class NewtonExactLineSearch(OptimizationMethod):
 				# Do exact line search to find the optimal step size
 				alpha = self.exact_line_search(x, direction)
 			
-				# Update the current point
+				# Update the current point and record it
 				x += alpha * direction
+				self.path.append(x.copy())
 			
 				iteration += 1
 			
