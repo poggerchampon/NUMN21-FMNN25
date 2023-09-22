@@ -9,7 +9,7 @@ try:
 except ImportError:
 	TF_INSTALLED = False
 
-from src.functions.helper_methods import numerical_gradient
+from src.functions import numerical_gradient
 
 class OptimizationProblem:
 	# Initiate an objective function with option to specify gradient
