@@ -2,8 +2,8 @@ import unittest
 import numpy as np
 import matplotlib.pyplot as plt
 
-from optimization_method import NewtonExactLineSearch, OptimizationMethod
-from optimization_problem import OptimizationProblem
+from src.optimization_methods import OptimizationMethod, NewtonExactLineSearch
+from src.optimization_problem import OptimizationProblem
 
 class TestNewtonExactLineSearch(unittest.TestCase):
 	
@@ -17,6 +17,7 @@ class TestNewtonExactLineSearch(unittest.TestCase):
 			opt_method = NewtonExactLineSearch(self.mock_problem, n=2, h=-1, tolerance=-1)
 			
 	def test_max_iterations_stopping_criteria(self):
+		print("\nTesting max_iterations stop")
 		opt_method = NewtonExactLineSearch(self.mock_problem, n=2, max_iterations=1)
 		result = opt_method.solve()
 		
@@ -27,8 +28,7 @@ class TestNewtonExactLineSearch(unittest.TestCase):
 		print("\nTesting Rosenbrock")
 		solver = NewtonExactLineSearch(self.rosen_brock, n=2)
 		expected_solution = np.array([1.0, 1.0])
-
-		# Check solution
+		
 		np.testing.assert_allclose(solver.solve(), expected_solution, atol=1e-1)
 		
 		path = np.array(solver.path)
@@ -41,7 +41,7 @@ class TestNewtonExactLineSearch(unittest.TestCase):
 		plt.plot(path[:, 0], path[:, 1], 'k-', linewidth=2)  # plot the optimization path
 		plt.plot(path[:, 0], path[:, 1], 'ro')  # mark the points along the path with red dots
 	
-		# Save the plot to a file
+		# Save the plot to a file instead of displaying it
 		plt.savefig('contour_plot.png')
 		
 # Run all unit tests
