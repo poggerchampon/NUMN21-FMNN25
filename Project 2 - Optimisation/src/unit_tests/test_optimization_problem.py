@@ -1,5 +1,7 @@
 import unittest
-from optimization_problem import OptimizationProblem
+
+from src.functions import helper_methods
+from src.optimization_problem import OptimizationProblem
 
 # Unit tests for OptimizationProblem class
 class TestOptimizationProblem(unittest.TestCase):
@@ -29,7 +31,7 @@ class TestOptimizationProblem(unittest.TestCase):
 	def test_gradient_not_provided(self):
 		opt_problem = OptimizationProblem(lambda x: x**2)
 		self.assertAlmostEqual(opt_problem.gradient(3, 'numerical'), 6)
-
+		
 	# Test getting num of parameters for multivariable
 	def test_get_num_of_params(self):
 		opt_problem = OptimizationProblem(lambda x, y, z: x * y + z)
