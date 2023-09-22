@@ -9,7 +9,7 @@ try:
 except ImportError:
 	TF_INSTALLED = False
 
-from helper_methods import numerical_gradient
+from src.functions.helper_methods import numerical_gradient
 
 class OptimizationProblem:
 	# Initiate an objective function with option to specify gradient
@@ -27,7 +27,7 @@ class OptimizationProblem:
 		return self.objective_func(x)
 	
 	# Returns the gradient value of the function
-	def gradient(self, x, method='numerical'):
+	def gradient(self, x, method='tf'):
 		if self.gradient_func:
 			return self.gradient_func(x)
 		else:
@@ -53,6 +53,9 @@ class OptimizationProblem:
 	# Returns the evaluate function
 	def get_evaluate(self):
 		return self.evaluate
+	
+	def get_gradient(self):
+		return self.gradient
 	
 	# Returns the num of paramaters for the function
 	def get_num_of_parameters(self):
