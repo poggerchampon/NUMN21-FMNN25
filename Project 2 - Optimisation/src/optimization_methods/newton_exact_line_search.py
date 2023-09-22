@@ -47,11 +47,9 @@ class NewtonExactLineSearch(OptimizationMethod):
 				
 				# Stopping criteria
 				if np.linalg.norm(current_gradient) < self.tolerance:
-					print(f"Converged in {iteration} iterations")
 					return x
 				
 				if iteration >= self.max_iterations:
-					print("Maximum iterations reached.")
 					return x
 				
 				# Compute approximate Hessian
