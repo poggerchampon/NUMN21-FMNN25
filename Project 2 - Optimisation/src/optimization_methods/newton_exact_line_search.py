@@ -1,5 +1,5 @@
 from .optimization_method import OptimizationMethod
-from src.functions.helper_methods import approximate_hessian
+from src.functions import approximate_hessian
 
 from scipy.optimize import minimize_scalar
 from tqdm import tqdm
