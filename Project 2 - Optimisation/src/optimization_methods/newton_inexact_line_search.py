@@ -15,3 +15,5 @@ class NewtonInexactLineSearch(ClassicalNewtonMethod):
 			if f_new_x <= armijo_condition:
 				return alpha
 			alpha *= 0.5
+		
+		return alpha # Return the latest alpha, even though it didn't satisfy the condition
