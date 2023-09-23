@@ -51,7 +51,7 @@ class NewtonLineSearch(OptimizationMethod):
 			
 	def solve(self):	
 		evaluate_func = self.opt_problem.get_evaluate()
-		gradient_fuc = self.opt_problem.get_gradient()
+		gradient_func = self.opt_problem.get_gradient()
 		
 		# Start with zeros if no initial guess is specified
 		x = self.initial_guess if self.initial_guess is not None else np.zeros(self.n)
@@ -60,8 +60,8 @@ class NewtonLineSearch(OptimizationMethod):
 		# Use tqdm for neat progress bar
 		with tqdm(total=self.max_iterations, desc="Optimizing", unit="iteration") as pbar:
 			while True:
-				current_value = self.opt_problem.evaluate(x)
-				current_gradient = self.opt_problem.gradient(x)
+				current_value = evaluate_func(x)
+				current_gradient = gradient_func(x)
 				
 				# Stopping criteria
 				if np.linalg.norm(current_gradient) < self.tolerance:
@@ -70,7 +70,7 @@ class NewtonLineSearch(OptimizationMethod):
 				if iteration >= self.max_iterations:
 					return x
 				
-				H = approximate_hessian(evaluate_func, gradient_fuc, x, self.n)
+				H = approximate_hessian(evaluate_func, gradient_func, x, self.n)
 				G = 0.5 * (H + H.T) # Make symmetric if necessary
 				direction = -np.linalg.solve(G, current_gradient) # Newton's direction
 				
