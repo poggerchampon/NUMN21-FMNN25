@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 
 from src.optimization_methods import OptimizationMethod, NewtonInexactLineSearch
 from src.optimization_problem import OptimizationProblem
+from src.functions import save_rosenbrock_plot
 
 class TestNewtonInexactLineSearch(unittest.TestCase):
 	def setUp(self):
@@ -16,19 +17,9 @@ class TestNewtonInexactLineSearch(unittest.TestCase):
 		
 		# Assert check -> is result close enough to expected
 		np.testing.assert_allclose(solver.solve(), expected_solution, atol=1e-1)
-		path = np.array(solver.path)
 		
-		# Create a grid for the contour plot
-		X, Y = np.meshgrid(np.linspace(-2, 2, 400), np.linspace(-1, 3, 400))
-		Z = self.rosen_brock.evaluate(np.array([X, Y]))
-	
-		# Create the contour plot
-		contour = plt.contour(X, Y, Z, levels=np.logspace(0, 5, 35), cmap='jet')
-		plt.plot(path[:, 0], path[:, 1], 'k-', linewidth=2)  # plot the optimization path
-		plt.plot(path[:, 0], path[:, 1], 'ro')  # mark the points along the path with red dots
-	
-		# Save the plot to a file instead of displaying it
-		plt.savefig('contour_plot.png')
+		# Save plot of the optimisation path
+		save_rosenbrock_plot(np.array(solver.path))
 		
 # Run all unit tests
 if __name__ == "__main__":
