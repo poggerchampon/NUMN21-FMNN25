@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 import matplotlib.pyplot as plt
 
-from src.optimization_methods import OptimizationMethod, NewtonExactLineSearch
+from src.optimization_methods import OptimizationMethod, NewtonLineSearch
 from src.optimization_problem import OptimizationProblem
 
 class TestNewtonExactLineSearch(unittest.TestCase):
@@ -14,11 +14,11 @@ class TestNewtonExactLineSearch(unittest.TestCase):
 	def test_validate_params_negative(self):
 		print("\nTesting validate_params_negative")
 		with self.assertRaises(ValueError):
-			opt_method = NewtonExactLineSearch(self.mock_problem, n=2, h=-1, tolerance=-1)
+			opt_method = NewtonLineSearch(self.mock_problem, n=2, h=-1, tolerance=-1)
 			
 	def test_max_iterations_stopping_criteria(self):
 		print("\nTesting max_iterations stop")
-		opt_method = NewtonExactLineSearch(self.mock_problem, n=2, max_iterations=1)
+		opt_method = NewtonLineSearch(self.mock_problem, n=2, max_iterations=1)
 		result = opt_method.solve()
 		
 		# For a mock quadratic function and only 1 iteration, the result should be [0, 0]
@@ -26,7 +26,7 @@ class TestNewtonExactLineSearch(unittest.TestCase):
 			
 	def test_rosen_brock(self):
 		print("\nTesting Rosenbrock")
-		solver = NewtonExactLineSearch(self.rosen_brock, n=2)
+		solver = NewtonLineSearch(self.rosen_brock, n=2)
 		expected_solution = np.array([1.0, 1.0])
 		
 		np.testing.assert_allclose(solver.solve(), expected_solution, atol=1e-1)
