@@ -5,7 +5,7 @@ from tqdm import tqdm
 import numpy as np
 
 class ClassicalNewtonMethod(OptimizationMethod):
-	def __init__(self, opt_problem, n, h=1e-12, tolerance=1e-5, max_iterations=1000, initial_guess=None):
+	def __init__(self, opt_problem, n, h=1e-5, tolerance=1e-5, max_iterations=1000, initial_guess=None):
 		super().__init__(opt_problem)
 		self.n = n
 		self.h = h
@@ -22,6 +22,15 @@ class ClassicalNewtonMethod(OptimizationMethod):
 	def compute_alpha(self, x, direction):
 		# In classical Newton, alpha is always 1
 		return 1.0
+	
+	# Method for finding the direction. Default here is classical newton
+	# Can be overridden in derived classes like DFP, SimpleBroyden, BFGS etc
+	def compute_direction(self, x, evaluate_func, gradient_func, current_gradient):
+		H = approximate_hessian(evaluate_func, gradient_func, x)
+		G = 0.5 * (H + H.T)  # Make symmetric if necessary
+		
+		direction = -np.linalg.solve(G, current_gradient)  # Newton's direction
+		return direction
 	
 	def solve(self):	
 		evaluate_func = self.opt_problem.get_evaluate()
@@ -44,9 +53,8 @@ class ClassicalNewtonMethod(OptimizationMethod):
 				if iteration >= self.max_iterations:
 					return x
 				
-				H = approximate_hessian(evaluate_func, gradient_func, x, self.n)
-				G = 0.5 * (H + H.T) # Make symmetric if necessary
-				direction = -np.linalg.solve(G, current_gradient) # Newton's direction
+				# Get direction using either classical method or derived method 
+				direction = self.compute_direction(x, evaluate_func, gradient_func, current_gradient)
 				
 				# Get alpha using either classical method or derived method
 				alpha = self.compute_alpha(x, direction)
