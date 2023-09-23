@@ -6,13 +6,16 @@ from tqdm import tqdm
 
 import numpy as np
 
-class NewtonExactLineSearch(OptimizationMethod):
-	def __init__(self, opt_problem, n, h=1e-12, tolerance=1e-5, max_iterations=1000):
+# Can be specified to use either the exact line search
+# or the inexact line search using Armijo rule
+class NewtonLineSearch(OptimizationMethod):
+	def __init__(self, opt_problem, n, h=1e-12, tolerance=1e-5, max_iterations=1000, exact=True):
 		super().__init__(opt_problem)
 		self.n = n
 		self.h = h
 		self.tolerance = tolerance
 		self.max_iterations = max_iterations
+		self.exact = exact
 		self.path = [] # Initiate an empty list to store the optimisation path
 		
 		# Check paramaters
@@ -30,6 +33,20 @@ class NewtonExactLineSearch(OptimizationMethod):
 			return result.x # return best alpha
 		else:
 			raise ValueError("Line search failed: " + result.message)
+			
+	def inexact_line_search(self, x, direction, sigma=1e-4):
+		alpha = 1
+		while True:
+			# Compute Armijo condition
+			f_new_x = self.opt_problem.evaluate(x + alpha * direction)
+			f_x = self.opt_problem.evaluate(x)
+			gradient_f_x = self.opt_problem.gradient(x)
+			armijo_condition = f_x + sigma * alpha * np.dot(gradient_f_x, direction)
+			
+			# Check Armijo rule
+			if f_new_x <= armijo_condition:
+				return alpha
+			alpha *= 0.5
 			
 	def solve(self):	
 		evaluate_func = self.opt_problem.get_evaluate()
@@ -52,26 +69,23 @@ class NewtonExactLineSearch(OptimizationMethod):
 				if iteration >= self.max_iterations:
 					return x
 				
-				# Compute approximate Hessian
 				H = approximate_hessian(evaluate_func, gradient_fuc, x, self.n)
+				G = 0.5 * (H + H.T) # Make symmetric if necessary
+				direction = -np.linalg.solve(G, current_gradient) # Newton's direction
 				
-				# Make symmetric if necessary
-				G = 0.5 * (H + H.T)
+				# Choose between exact and inexact line search
+				if self.exact:
+					alpha = self.exact_line_search(x, direction)
+				else:
+					alpha = self.inexact_line_search(x, direction)
 				
-				# Newton's direction
-				direction = -np.linalg.solve(G, current_gradient)
-				
-				# Do exact line search to find the optimal step size
-				alpha = self.exact_line_search(x, direction)
-				
-				# Update the current point and record it
+				# Update the current point and save it
 				x += alpha * direction
 				self.path.append(x.copy())
 				
-				iteration += 1
-				
 				# Update the progress bar
 				pbar.update(1)
+				iteration += 1
 				
 			# Minimum found
 			return x
