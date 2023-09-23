@@ -1,8 +1,8 @@
-from .newton_line_search import NewtonLineSearch
+from .classical_newton_method import ClassicalNewtonMethod
 import numpy as np
 
-class NewtonInexactLineSearch(NewtonLineSearch):
-	def line_search(self, x, direction, sigma=1e-4, max_backtracks=10):
+class NewtonInexactLineSearch(ClassicalNewtonMethod):
+	def compute_alpha(self, x, direction, sigma=1e-4, max_backtracks=10):
 		alpha = 1
 		for _ in range(max_backtracks):
 			# Compute Armijo condition
@@ -15,4 +15,3 @@ class NewtonInexactLineSearch(NewtonLineSearch):
 			if f_new_x <= armijo_condition:
 				return alpha
 			alpha *= 0.5
-			
