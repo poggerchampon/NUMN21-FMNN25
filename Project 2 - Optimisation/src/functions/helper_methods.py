@@ -1,7 +1,4 @@
-import matplotlib.pyplot as plt
 import numpy as np
-#import tensorflow as tf
-import importlib.util
 
 # Default numerical method if gradient is not specified
 def numerical_gradient(evaluate_func, x, h=1e-5):
@@ -19,8 +16,9 @@ def numerical_hessian(evaluate_func, x, n, h=1e-5):
 
     return hessian
 
-def inv_numerical_hessian(evaluate_func, x, n, h=1e-5):
-    return np.linalg.inv(numerical_hessian(evaluate_func, x, n, h))
+# Returns the inverse of hessian
+def inv_approximate_hessian(evaluate_func, gradient_func, x, h=1e-5):
+    return np.linalg.inv(approximate_hessian(evaluate_func, gradient_func, x, h))
 
 # numerical_hessian() misses off-diagonal elements, also misses last row because of
 # 'dim-1' in the loop
@@ -38,7 +36,6 @@ def approximate_hessian(evaluate_func, gradient_func, x, h=1e-5):
         
         # Start from i + 1 to avoid recomputing diagonal, and use symmetry
         for j in range(i+1, n):
-
             x_j_pos = np.array(x) + h * identity_matrix[j]
             gradient_j_pos = gradient_func(x_j_pos)
                 
@@ -47,22 +44,3 @@ def approximate_hessian(evaluate_func, gradient_func, x, h=1e-5):
             hessian[j][i] = hessian[i][j] 
     
     return hessian
-
-# Plot function with specified x_range and number of points
-def plot_objective_2D(evaluate_func, range_x = None, num_points=100):
-    if range_x is None:
-        print("Range for x is not specified")
-        return
-    
-    x_values = np.linspace(range_x[0], range_x[1], num_points)
-    y_values = [evaluate_func(x) for x in x_values]
-    
-    plt.plot(x_values, y_values)
-    plt.xlabel("x")
-    plt.ylabel("Objective function value")
-    plt.title("Objective function")
-    plt.show()
-
-# 3D visualisation?
-def plot_objective_3D(self):
-    return
