@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Sep 24 18:58:34 2023
-
-@author: laptop
-"""
 from numpy import *
 from matplotlib.pyplot import *
 from .newton_inexact_line_search import NewtonInexactLineSearch 
