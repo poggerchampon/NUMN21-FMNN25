@@ -11,7 +11,7 @@ class DFP(NewtonInexactLineSearch):
                     # Start with zeros if no initial guess is specified
         x = self.initial_guess if self.initial_guess is not None else zeros(self.n)
         
-        self.H = inv_numerical_hessian(self.opt_problem.objective_func, \
+        self.H = inv_approximate_hessian(self.opt_problem.objective_func, \
                                        self.opt_problem.gradient_func, x)
     
     def compute_direction(self, x, evaluate_func, gradient_func, current_gradient):
