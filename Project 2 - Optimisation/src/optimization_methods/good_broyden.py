@@ -13,7 +13,7 @@ class GoodBroyden(NewtonInexactLineSearch):
         
         self.Q = approximate_hessian(self.opt_problem.objective_func, \ 
                                      self.opt_problem.gradient_func, x = None)  
-        self.H = inv_numerical_hessian(self.opt_problem.objective_func, \
+        self.H = inv_approximate_hessian(self.opt_problem.objective_func, \
                                        self.opt_problem.gradient_func, x = None)
     
     def compute_direction(self, x, evaluate_func, gradient_func, current_gradient):
