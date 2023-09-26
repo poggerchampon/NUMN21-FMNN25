@@ -17,8 +17,8 @@ def numerical_hessian(evaluate_func, x, n, h=1e-5):
     return hessian
 
 # Returns the inverse of hessian
-def inv_approximate_hessian(evaluate_func, gradient_func, x, h=1e-5):
-    return np.linalg.inv(approximate_hessian(evaluate_func, gradient_func, x, h))
+def inv_approximate_hessian(gradient_func, x, h=1e-5):
+    return np.linalg.inv(approximate_hessian(gradient_func, x, h))
 
 # numerical_hessian() misses off-diagonal elements, also misses last row because of
 # 'dim-1' in the loop
