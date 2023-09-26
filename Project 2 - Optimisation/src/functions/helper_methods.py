@@ -22,25 +22,26 @@ def inv_approximate_hessian(evaluate_func, gradient_func, x, h=1e-5):
 
 # numerical_hessian() misses off-diagonal elements, also misses last row because of
 # 'dim-1' in the loop
-def approximate_hessian(evaluate_func, gradient_func, x, h=1e-5):
+def approximate_hessian(gradient_func, x, h=1e-5):
     n = len(x)
     hessian = np.zeros((n, n))
     identity_matrix = np.eye(n)
+    base_gradient = gradient_func(x)
     
     for i in range(n):
         # Diagonal elements
-        x_i_pos = np.array(x) + h * identity_matrix[i]
+        x_i_pos = x + h * identity_matrix[i]
         gradient_i_pos = gradient_func(x_i_pos)
-        
-        hessian[i][i] = (gradient_i_pos[i] - gradient_func(x)[i]) / h
+        hessian[i][i] = (gradient_i_pos[i] - base_gradient[i]) / h
         
         # Start from i + 1 to avoid recomputing diagonal, and use symmetry
         for j in range(i+1, n):
-            x_j_pos = np.array(x) + h * identity_matrix[j]
+            x_j_pos = x + h * identity_matrix[j]
             gradient_j_pos = gradient_func(x_j_pos)
-                
-            # Take advantage of symmetry to do compute both sides of the matrix
-            hessian[i][j] = (gradient_j_pos[i] - gradient_func(x)[i]) / h
-            hessian[j][i] = hessian[i][j] 
-    
+            
+            # Take advantage of symmetry to compute both sides of the matrix
+            value = (gradient_j_pos[i] - base_gradient[i]) / h
+            hessian[i][j] = value
+            hessian[j][i] = value
+            
     return hessian
