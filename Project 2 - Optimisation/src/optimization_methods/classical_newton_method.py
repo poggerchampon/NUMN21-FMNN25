@@ -33,7 +33,6 @@ class ClassicalNewtonMethod(OptimizationMethod):
 		return direction
 	
 	def solve(self):	
-		evaluate_func = self.opt_problem.get_evaluate()
 		gradient_func = self.opt_problem.get_gradient()
 		
 		# Start with zeros if no initial guess is specified
@@ -43,13 +42,10 @@ class ClassicalNewtonMethod(OptimizationMethod):
 		# Use tqdm for neat progress bar
 		with tqdm(total=self.max_iterations, desc="Optimizing", unit="iteration") as pbar:
 			while True:
-				current_value = evaluate_func(x)
 				current_gradient = gradient_func(x)
 				
 				# Stopping criteria
-				if np.linalg.norm(current_gradient) < self.tolerance:
-					return x
-				if iteration >= self.max_iterations:
+				if np.linalg.norm(current_gradient) < self.tolerance or iteration >= self.max_iterations:
 					return x
 				
 				# Get direction and step size using either classical method or derived method 
