@@ -26,7 +26,7 @@ class ClassicalNewtonMethod(OptimizationMethod):
 	# Method for finding the direction. Default here is classical newton
 	# Can be overridden in derived classes like DFP, SimpleBroyden, BFGS etc
 	def compute_direction(self, x, gradient_func, current_gradient):
-		H = approximate_hessian(gradient_func, x)
+		H = approximate_hessian(gradient_func, x, self.n)
 		G = 0.5 * (H + H.T)  # Make symmetric if necessary
 		
 		direction = -np.linalg.solve(G, current_gradient)  # Newton's direction
