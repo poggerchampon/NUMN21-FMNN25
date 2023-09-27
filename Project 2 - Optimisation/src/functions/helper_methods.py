@@ -2,7 +2,13 @@ import numpy as np
 
 # Default numerical method if gradient is not specified
 def numerical_gradient(evaluate_func, x, h=1e-5):
-    return (evaluate_func(x + h) - evaluate_func(x - h)) / (2.0 * h)
+    grad = np.zeros(len(x), dtype=float)
+    identity_matrix=np.eye(len(x))
+    
+    for i in range(len(x)):
+        grad[i] = (evaluate_func(x + h * identity_matrix[i]) - evaluate_func(x - h * identity_matrix[i])) / (2.0 * h)
+    
+    return np.array(grad)
 
 def numerical_hessian(evaluate_func, x, n, h=1e-5):
     dim = len(x)
