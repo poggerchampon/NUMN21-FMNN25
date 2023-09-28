@@ -31,6 +31,10 @@ class ClassicalNewtonMethod(OptimizationMethod):
 		
 		direction = -np.linalg.solve(G, current_gradient)  # Newton's direction
 		return direction
+		
+	# hessian update method for Quasi newton methods
+	def update_inv_hessian(self):
+		pass
 	
 	def solve(self):	
 		gradient_func = self.opt_problem.get_gradient()
@@ -55,6 +59,9 @@ class ClassicalNewtonMethod(OptimizationMethod):
 				# Update the current point and save it
 				x += alpha * direction
 				self.path.append(x.copy())
+
+				# update hessian
+				self.update_inv_hessian()
 				
 				# Update the progress bar
 				pbar.update(1)
