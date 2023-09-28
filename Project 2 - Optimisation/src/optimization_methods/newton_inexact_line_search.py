@@ -15,7 +15,7 @@ class NewtonInexactLineSearch(ClassicalNewtonMethod):
 			# Check Armijo rule
 			if f_new_x >= armijo_condition:
 				alpha *= 0.5
-			elif gradient_new_f_x <= wolfe_condition:
+			elif any(gradient_new_f_x) <= wolfe_condition:
 				alpha *= 2
 			else:
 				return alpha
