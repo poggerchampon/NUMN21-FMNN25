@@ -1,21 +1,20 @@
 import numpy as np
+
 from .newton_inexact_line_search import NewtonInexactLineSearch 
+from src.functions import inv_approximate_hessian
 
 class SymmetricBroyden(NewtonInexactLineSearch):
     
     def __init__(self, opt_problem, n, h=1e-5, tolerance=1e-5, max_iterations=1000, initial_guess = None):
-    
         super().__init__(opt_problem, n, h, tolerance, max_iterations, initial_guess)
         # Start with zeros if no initial guess is specified
         x = self.initial_guess if self.initial_guess is not None else np.zeros(self.n)
         self.H = inv_approximate_hessian(self.opt_problem.gradient_func, x)
     
     def compute_direction(self, x, gradient_func, current_gradient):
-        self.update_hessian_invHessian()
-        s = -self.H @ current_gradient
-        return s
+        return -self.H @ current_gradient
         
-    def update_hessian_invHessian(self):
+    def update_inv_hessian(self):
         # won't have 2 old points in the beginning
         if len(self.path) < 2:
             return
