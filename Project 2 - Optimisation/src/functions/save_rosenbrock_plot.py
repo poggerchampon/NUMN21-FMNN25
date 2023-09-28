@@ -13,9 +13,7 @@ def save_rosenbrock_plot(path, filename='contour_plot.png', cmap='viridis'):
 	fig, ax = plt.subplots(figsize=(10, 8), dpi=100)
 	
 	# Create the contour plot
-	contour = ax.contour(X, Y, Z, levels=np.logspace(-1, 5, 18), cmap=cmap)
-	cbar = plt.colorbar(contour, ax=ax)
-	cbar.set_label('Function Value', labelpad=12, fontsize=12)
+	contour = ax.contour(X, Y, Z, levels=np.logspace(-1, 5, 18), cmap=cmap, vmin=-1, vmax=1000)
 	
 	# Label contour lines
 	ax.clabel(contour, inline=1, fontsize=10, fmt='%1.1f')
