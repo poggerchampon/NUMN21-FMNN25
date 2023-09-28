@@ -1,5 +1,7 @@
 import numpy as np
-from .newton_inexact_line_search import NewtonInexactLineSearch 
+
+from .newton_inexact_line_search import NewtonInexactLineSearch
+from src.functions import inv_approximate_hessian
 
 class BadBroyden(NewtonInexactLineSearch):
     
