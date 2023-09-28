@@ -15,7 +15,7 @@ class BFGS(NewtonInexactLineSearch):
     def compute_direction(self, x, gradient_func, current_gradient):
         return -self.H @ current_gradient
         
-    def update_hessian_invHessian(self):
+    def update_inv_hessian(self):
         # won't have 2 old points in the beginning
         if len(self.path) < 2:
             return
