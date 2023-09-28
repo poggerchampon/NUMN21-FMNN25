@@ -10,26 +10,13 @@ def numerical_gradient(evaluate_func, x, h=1e-5):
     
     return np.array(grad)
 
-def numerical_hessian(evaluate_func, x, n, h=1e-5):
-    dim = len(x)
-    hessian=np.zeros((dim,dim))
-    identity_matrix=np.diag(np.ones(dim))
-
-    for i in range(0,dim-1):
-        for j in range(0,dim-1):
-        
-            hessian[i][j]=(evaluate_func(x+h*identity_matrix[i])+evaluate_func(x+h*identity_matrix[j])-2*evaluate_func(x))/h**2
-
-    return hessian
-
 # Returns the inverse of hessian
-def inv_approximate_hessian(gradient_func, x, h=1e-5):
-    return np.linalg.inv(approximate_hessian(gradient_func, x, h))
+def inv_approximate_hessian(gradient_func, x, n, h=1e-5):
+    return np.linalg.inv(approximate_hessian(gradient_func, x, n, h))
 
 # numerical_hessian() misses off-diagonal elements, also misses last row because of
 # 'dim-1' in the loop
-def approximate_hessian(gradient_func, x, h=1e-5):
-    n = len(x)
+def approximate_hessian(gradient_func, x, n, h=1e-5):
     hessian = np.zeros((n, n))
     identity_matrix = np.eye(n)
     base_gradient = gradient_func(x)
