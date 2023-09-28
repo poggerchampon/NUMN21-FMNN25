@@ -6,10 +6,10 @@ from .newton_inexact_line_search import NewtonInexactLineSearch
 
 # QuasiNewton
 from .good_broyden import GoodBroyden
-from .bad_broyden import BadBroydenn
+from .bad_broyden import BadBroyden
 from .symmetric_broyden import SymmetricBroyden
 from .dfp import DFP
-from .BFGS import BFGS
+from .bfgs import BFGS
 
 __all__ = [
     'OptimizationMethod', 
