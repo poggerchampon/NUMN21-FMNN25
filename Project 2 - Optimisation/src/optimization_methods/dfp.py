@@ -10,7 +10,7 @@ class DFP(NewtonInexactLineSearch):
         super().__init__(opt_problem, n, h, tolerance, max_iterations, initial_guess)
         # Start with zeros if no initial guess is specified
         x = self.initial_guess if self.initial_guess is not None else np.zeros(self.n)
-        self.H = inv_approximate_hessian(self.opt_problem.gradient_func, x)
+        self.H = inv_approximate_hessian(self.opt_problem.gradient_func, x, n)
     
     def compute_direction(self, x, gradient_func, current_gradient):
         return -self.H @ current_gradient
