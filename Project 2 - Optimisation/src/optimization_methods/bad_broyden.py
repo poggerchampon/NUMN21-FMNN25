@@ -19,8 +19,8 @@ class BadBroyden(NewtonExactLineSearch):
             delta_x = x - self.prev_x 
             delta_g = current_gradient - self.prev_gradient
         
-            B_inv_gamma = np.dot(self.H_inv, delta_g)
-            numerator = np.dot((delta_x - B_inv_gamma), delta_g.T)
+            H_inv_gamma = np.dot(self.H_inv, delta_g)
+            numerator = np.dot((delta_x - H_inv_gamma), delta_g.T)
             denominator = np.dot(delta_g.T, delta_g)
         
             if denominator != 0:
