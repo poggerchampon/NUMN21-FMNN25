@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 import matplotlib.pyplot as plt
 
-from src.optimization_methods import OptimizationMethod, NewtonExactLineSearch
+from src.optimization_methods import NewtonExactLineSearch
 from src.optimization_problem import OptimizationProblem
 from src.functions import save_rosenbrock_plot
 
@@ -34,7 +34,7 @@ class TestNewtonExactLineSearch(unittest.TestCase):
 		np.testing.assert_allclose(solver.solve(), expected_solution, atol=1e-1)
 		
 		# Save plot of optimisation path
-		save_rosenbrock_plot(np.array(solver.path))
+		save_rosenbrock_plot(np.array(solver.path), filename='inexact_search_contour')
 		
 # Run all unit tests
 if __name__ == "__main__":
