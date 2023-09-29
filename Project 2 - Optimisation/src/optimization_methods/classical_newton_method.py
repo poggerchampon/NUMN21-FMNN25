@@ -33,7 +33,7 @@ class ClassicalNewtonMethod(OptimizationMethod):
 		return direction
 		
 	# hessian update method for Quasi newton methods
-	def update_inv_hessian(self):
+	def update_inv_hessian(self, x, gradient_func, current_gradient):
 		pass
 	
 	def solve(self):	
@@ -55,13 +55,15 @@ class ClassicalNewtonMethod(OptimizationMethod):
 				# Get direction and step size using either classical method or derived method 
 				direction = self.compute_direction(x, gradient_func, current_gradient)
 				alpha = self.compute_alpha(x, direction)
+
+				# update hessian
+				self.update_inv_hessian(x, gradient_func, current_gradient)
+				self.prev_x = x.copy()
+				self.prev_gradient = current_gradient
 				
 				# Update the current point and save it
 				x += alpha * direction
 				self.path.append(x.copy())
-
-				# update hessian
-				self.update_inv_hessian()
 				
 				# Update the progress bar
 				pbar.update(1)
