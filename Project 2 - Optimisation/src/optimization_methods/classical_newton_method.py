@@ -12,6 +12,10 @@ class ClassicalNewtonMethod(OptimizationMethod):
 		self.tolerance = tolerance
 		self.max_iterations = max_iterations
 		self.initial_guess = initial_guess
+		
+		# Store previous x and gradient
+		self.prev_x = None
+		self.prev_gradient = None
 		self.path = []  # Initiate an empty list to store the optimisation path
 		
 		# Check parameters
@@ -48,6 +52,9 @@ class ClassicalNewtonMethod(OptimizationMethod):
 			while True:
 				current_gradient = gradient_func(x)
 				
+				x_str = np.array2string(x, formatter={'all': lambda x: f'{x:.2e}'})
+				pbar.set_description(f"Optimizing (x = {x_str})")
+				
 				# Stopping criteria
 				if np.linalg.norm(current_gradient) < self.tolerance or iteration >= self.max_iterations:
 					return x
@@ -55,9 +62,10 @@ class ClassicalNewtonMethod(OptimizationMethod):
 				# Get direction and step size using either classical method or derived method 
 				direction = self.compute_direction(x, gradient_func, current_gradient)
 				alpha = self.compute_alpha(x, direction)
-
+				
 				# update hessian
 				self.update_inv_hessian(x, gradient_func, current_gradient)
+				
 				self.prev_x = x.copy()
 				self.prev_gradient = current_gradient
 				
@@ -79,3 +87,4 @@ class ClassicalNewtonMethod(OptimizationMethod):
 				
 		if self.initial_guess is not None and len(self.initial_guess) != self.n:
 			raise ValueError("Initial guess must have same dimension as input function")
+			
