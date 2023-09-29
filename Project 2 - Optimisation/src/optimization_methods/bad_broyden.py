@@ -1,9 +1,9 @@
 import numpy as np
 
-from .newton_inexact_line_search import NewtonInexactLineSearch
+from .newton_exact_line_search import NewtonExactLineSearch
 from src.functions import inv_approximate_hessian
 
-class BadBroyden(NewtonInexactLineSearch):
+class BadBroyden(NewtonExactLineSearch):
     def __init__(self, opt_problem, n, h=1e-5, tolerance=1e-2, max_iterations=1000, initial_guess = None):
         super().__init__(opt_problem, n, h, tolerance, max_iterations, initial_guess)
         
