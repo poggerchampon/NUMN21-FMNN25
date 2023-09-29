@@ -1,41 +1,30 @@
 import numpy as np
 
 from .newton_inexact_line_search import NewtonInexactLineSearch
-from src.functions import approximate_hessian, inv_approximate_hessian
+from src.functions import inv_approximate_hessian
 
 class GoodBroyden(NewtonInexactLineSearch):
     
-    def __init__(self, opt_problem, n, h=1e-5, tolerance=1e-5, max_iterations=1000, initial_guess = None):
+    def __init__(self, opt_problem, n, h=1e-5, tolerance=1e-3, max_iterations=1000, initial_guess = None):
         super().__init__(opt_problem, n, h, tolerance, max_iterations, initial_guess)
-        # Start with zeros if no initial guess is specified
-        x = self.initial_guess if self.initial_guess is not None else np.zeros(self.n)
-        
-        self.Q = approximate_hessian(self.opt_problem.gradient_func, x, n)  
-        self.H = inv_approximate_hessian(self.opt_problem.gradient_func, x, n)
-    
-    def compute_direction(self, x, gradient_func, current_gradient):
-        return -self.H @ current_gradient
-        
-    def update_inv_hessian(self):
-        
-        x_new = self.path[-1]
-        x_old = self.path[-2]
-        
-        grad_new = self.opt_problem.gradient(x_new)
-        grad_old = self.opt_problem.gradient(x_old)
-        
-        H = self.H    
-        Q = self.Q
-        
-        delta = x_new - x_old 
-        gamma = grad_new - grad_old
-        
-        v = (gamma - Q @ delta)*(1/(delta.T @ delta))
-        
-        # Updating H
-        self.H = H + (1/(delta.T @ H @ gamma))*(delta - H @ gamma) @ (delta.T @ H) 
-        
-        # Update Q
-        self.Q = Q + v @ delta.T
 
-        pass
+        x = self.initial_guess if self.initial_guess is not None else np.zeros(self.n)
+        self.H_inv = inv_approximate_hessian(self.opt_problem.get_gradient(), x, n)
+        
+    def compute_direction(self, x, gradient_func, current_gradient):
+        return -np.dot(self.H_inv, current_gradient)
+        
+    def update_inv_hessian(self, x, gradient_func, current_gradient):
+        if self.prev_x is not None and self.prev_gradient is not None:
+            delta_x = x - self.prev_x
+            delta_g = current_gradient - self.prev_gradient
+            
+            u = delta_x - np.dot(self.H_inv, delta_g)
+            a = 1 / np.dot(u.T, delta_g)
+            
+            self.H_inv += a * np.outer(u, u)
+        
+    def solve(self):
+        self.prev_x = None
+        self.prev_gradient = None
+        return super().solve()
