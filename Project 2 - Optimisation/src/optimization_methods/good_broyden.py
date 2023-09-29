@@ -17,9 +17,6 @@ class GoodBroyden(NewtonInexactLineSearch):
         return -self.H @ current_gradient
         
     def update_inv_hessian(self):
-        # won't have 2 old points in the beginning
-        if len(self.path) < 2:
-            return
         
         x_new = self.path[-1]
         x_old = self.path[-2]
@@ -40,3 +37,5 @@ class GoodBroyden(NewtonInexactLineSearch):
         
         # Update Q
         self.Q = Q + v @ delta.T
+
+        pass
