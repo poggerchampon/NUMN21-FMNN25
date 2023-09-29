@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from src.optimization_methods import GoodBroyden, BadBroyden, SymmetricBroyden, DFP
+from src.optimization_methods import GoodBroyden, BadBroyden, SymmetricBroyden, DFP, BFGS
 from src.optimization_problem import OptimizationProblem
 from src.functions import save_rosenbrock_plot
 
@@ -56,7 +56,7 @@ class TestQuasiNewton(unittest.TestCase):
 		
 	def test_bfgs(self):
 		print("\nTesting BFGS")
-		solver = DFP(self.rosen_brock, n=2, initial_guess=np.array([0.0, 0.0]))
+		solver = BFGS(self.rosen_brock, n=2, initial_guess=np.array([0.0, 0.0]))
 		result = solver.solve()
 		
 		# Assert check -> is result close enough to expected
