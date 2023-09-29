@@ -16,43 +16,54 @@ class TestQuasiNewton(unittest.TestCase):
 		result = solver.solve()
 			
 		# Assert check -> is result close enough to expected
-		np.testing.assert_allclose(result, self.expected_solution, atol=1)
+		np.testing.assert_allclose(result, self.expected_solution, atol=1e-1)
 		
 		# Save plot of the optimisation path
 		save_rosenbrock_plot(np.array(solver.path), filename='good_broyden_contour')
 		
 	def test_bad_broyden(self):
 		print("\nTesting Bad Broyden")
-		#solver = BadBroyden(self.rosen_brock, n=2, initial_guess=np.array([0.0, 0.0]))
-		#result = solver.solve()
+		solver = BadBroyden(self.rosen_brock, n=2, initial_guess=np.array([0.0, 0.0]))
+		result = solver.solve()
 		
 		# Assert check -> is result close enough to expected
-		#np.testing.assert_allclose(result, self.expected_solution, atol=1)
+		np.testing.assert_allclose(result, self.expected_solution, atol=1e-1)
 		
 		# Save plot of the optimisation path
-		#save_rosenbrock_plot(np.array(solver.path), filename='bad_broyden_contour')
+		save_rosenbrock_plot(np.array(solver.path), filename='bad_broyden_contour')
 		
 	def test_symmetric_broyden(self):
 		print("\nTesting Symmetric Broyden")
-		#solver = SymmetricBroyden(self.rosen_brock, n=2, initial_guess=np.array([0.0, 0.0]))
-		#result = solver.solve()
+		solver = SymmetricBroyden(self.rosen_brock, n=2, initial_guess=np.array([0.0, 0.0]))
+		result = solver.solve()
 		
 		# Assert check -> is result close enough to expected
-		#np.testing.assert_allclose(result, self.expected_solution, atol=1e-1)
+		np.testing.assert_allclose(result, self.expected_solution, atol=1e-1)
 		
 		# Save plot of the optimisation path
-		#save_rosenbrock_plot(np.array(solver.path), filename='symmetric_broyden_contour')
+		save_rosenbrock_plot(np.array(solver.path), filename='symmetric_broyden_contour')
 		
 	def test_dfp(self):
 		print("\nTesting DFP")
-		#solver = DFP(self.rosen_brock, n=2, initial_guess=np.array([0.5, 0.5]))
-		#result = solver.solve()
+		solver = DFP(self.rosen_brock, n=2, initial_guess=np.array([0.0, 0.0]))
+		result = solver.solve()
 		
 		# Assert check -> is result close enough to expected
-		#np.testing.assert_allclose(result, self.expected_solution, atol=1e-1)
+		np.testing.assert_allclose(result, self.expected_solution, atol=1e-1)
 		
 		# Save plot of the optimisation path
-		#save_rosenbrock_plot(np.array(solver.path), filename='dfp_contour')
+		save_rosenbrock_plot(np.array(solver.path), filename='dfp_contour')
+		
+	def test_bfgs(self):
+		print("\nTesting BFGS")
+		solver = DFP(self.rosen_brock, n=2, initial_guess=np.array([0.0, 0.0]))
+		result = solver.solve()
+		
+		# Assert check -> is result close enough to expected
+		np.testing.assert_allclose(result, self.expected_solution, atol=1e-1)
+		
+		# Save plot of the optimisation path
+		save_rosenbrock_plot(np.array(solver.path), filename='bfgs_contour')
 		
 # Run all unit tests
 if __name__ == "__main__":
