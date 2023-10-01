@@ -32,4 +32,9 @@ class BFGS(NewtonInexactLineSearch):
             second_term = second_term_numerator / second_term_denominator
             
             self.H_inv += (first_term - second_term)
+
+    def solve(self):
+        self.prev_x = None
+        self.prev_gradient = None
+        return super().solve()
             
