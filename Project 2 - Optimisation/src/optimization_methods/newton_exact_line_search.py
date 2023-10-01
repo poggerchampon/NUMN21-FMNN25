@@ -1,5 +1,4 @@
 from .classical_newton_method import ClassicalNewtonMethod
-from src.functions import approximate_hessian
 
 from scipy.optimize import minimize_scalar
 import numpy as np
@@ -7,12 +6,12 @@ import numpy as np
 # Using exact line search, returnn best step size alpha
 # Overriding compute_alpha() in ClassicalNewtonMethod class
 class NewtonExactLineSearch(ClassicalNewtonMethod):
-	def compute_alpha(self, x, direction):
+	def _compute_alpha(self, x, direction):
 		# define g(alpha) = f(x + alpha * direction)
 		def g(alpha):
 			return self.opt_problem.evaluate(x + alpha * direction)
 		
-		# Cheat and use scipy to minimize the function
+		# use scipy to minimize the function
 		result = minimize_scalar(g, bracket=[0, 1])
 		
 		if result.success:
