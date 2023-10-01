@@ -18,12 +18,16 @@ class GoodBroyden(NewtonInexactLineSearch):
         if self.prev_x is not None and self.prev_gradient is not None:
             delta_x = x - self.prev_x
             delta_g = current_gradient - self.prev_gradient
-            
-            u = delta_x - np.dot(self.H_inv, delta_g)
-            a = 1 / np.dot(u.T, delta_g)
-            
-            self.H_inv += a * np.outer(u, u)
-        
+
+            deltax_Hinv = np.dot(delta_x,H_inv) 
+            numerator = np.dot(delta_x - np.dot(H_inv,delta_g),deltax_Hinv)
+            denominator = np.dot(deltax_Hinv,delta_g)
+
+            if denominator != 0:
+                self.H_inv += numerator/denominator
+            else:
+                print("Division by zero encountered in update_inv_hessian, skipping this update")
+                
     def solve(self):
         self.prev_x = None
         self.prev_gradient = None
