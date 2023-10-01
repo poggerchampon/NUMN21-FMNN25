@@ -23,13 +23,13 @@ class TestApproximateHessian(unittest.TestCase):
 		
 	# f(x) = x^2 + y^2 --> hessian should be [[2, 0], [0, 2]]
 	def test_approximate_hessian(self):
-		hessian = approximate_hessian(self.quad_2D.get_gradient(), np.array([1, 1]), 2)
+		hessian = approximate_hessian(self.quad_2D.get_evaluate(), self.quad_2D.get_gradient(), np.array([1, 1]), 2)
 		expected = np.array([[2, 0], [0, 2]])
-		
+
 		np.testing.assert_array_almost_equal(hessian, expected, decimal=2)
 		
 	def test_hessian_output_size(self):
-		hessian = approximate_hessian(self.quad_2D.get_gradient(), np.array([1, 1]), 2)
+		hessian = approximate_hessian(self.quad_2D.get_evaluate(), self.quad_2D.get_gradient(), np.array([1, 1]), 2)
 		self.assertEqual(hessian.shape, (2, 2))
 		
 # Run all unit tests
