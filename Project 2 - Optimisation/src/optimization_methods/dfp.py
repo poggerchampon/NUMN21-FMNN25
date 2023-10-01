@@ -26,3 +26,8 @@ class DFP(NewtonInexactLineSearch):
             second_term = np.dot(H_inv_g, g_H_inv) / np.dot(delta_g.T, H_inv_g)
             
             self.H_inv += (first_term - second_term)
+
+    def solve(self):
+        self.prev_x = None
+        self.prev_gradient = None
+        return super().solve()
