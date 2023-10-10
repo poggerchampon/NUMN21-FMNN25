@@ -1,8 +1,7 @@
 import numpy as np
 from scipy.linalg import solve
-from src.utilities.constants import dx
 
-def _initialise_equation_system(u, n, m):
+def _initialise_equation_system(u, n, m, dx):
 	"""
 	Initialises the matrix 'A' and 'b' for the equation system 'Ax = b'
 	Uses 2nd order central differences
@@ -12,6 +11,7 @@ def _initialise_equation_system(u, n, m):
 	'u' : A 2D numpy array representing the room including its boundaries
 	'n' : Width of room 'u'
 	'm' : Height of room 'u'
+	'dx' : grid mesh width
 
 	Returns:
 	-----------
@@ -37,7 +37,7 @@ def _initialise_equation_system(u, n, m):
 			
 	return A, b
 
-def solve_laplace(u):
+def solve_laplace(u, dx):
 	"""
 	Solves the laplace equation for a room 'u' using Scipy.linalg.solve
 	
@@ -52,7 +52,7 @@ def solve_laplace(u):
 	n = u.shape[0]
 	m = u.shape[1]
 	
-	A, b = _initialise_equation_system(u, n, m)
+	A, b = _initialise_equation_system(u, n, m, dx)
 				
 	u_new = solve(A, b).reshape((n, m))
 	return u_new
