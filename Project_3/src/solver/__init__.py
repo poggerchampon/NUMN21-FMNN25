@@ -1,1 +1,2 @@
 from .laplace_solver import solve_laplace
+from .dirichlet_neumann_solver import DirichletNeumannSolver
