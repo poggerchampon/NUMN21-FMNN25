@@ -1,0 +1,19 @@
+{
+    "rooms": [
+        { 
+            "dimensions": [21, 21],
+            "boundary_conditions": {"left": "u_heater"},
+            "adjacent_rooms": {"right": 1}
+        },
+        {
+            "dimensions": [41, 21],
+            "boundary_conditions": {"top": "u_heater", "bottom": "u_window"},
+            "adjacent_rooms": {"left": 0, "right": 2}
+        },
+        {
+            "dimensions": [21, 21],
+            "boundary_conditions": {"right": "u_heater"},
+            "adjacent_rooms": {"left": 1}
+        }
+    ]
+}
