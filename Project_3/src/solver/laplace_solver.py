@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.linalg import solve
+from src.utilities.constants import dx
 
 def _initialise_equation_system(u, n, m):
 	"""
@@ -27,11 +28,11 @@ def _initialise_equation_system(u, n, m):
 				A[idx, idx] = 1
 				b[idx] = u[i, j] # boundary condition
 			else:
-				A[idx, idx] = -4
-				A[idx, idx + 1] = 1
-				A[idx, idx - 1] = 1
-				A[idx, idx + m] = 1
-				A[idx, idx - m] = 1
+				A[idx, idx] = -4 / dx**2
+				A[idx, idx + 1] = 1 / dx**2
+				A[idx, idx - 1] = 1 / dx**2
+				A[idx, idx + m] = 1 / dx**2
+				A[idx, idx - m] = 1 / dx**2
 				b[idx] = 0
 			
 	return A, b
