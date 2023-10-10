@@ -1,8 +1,8 @@
 from mpi4py import MPI
 import numpy as np
 
-from src.solver.dirichlet_neumann_solver import DirichletNeumannSolver
-from src.utilities.plot_temperature import plot_temperature
+from solver.dirichlet_neumann_solver import DirichletNeumannSolver
+from utilities.plot_temperature import plot_temperature
 from models.load_apartment import load_apartment_layout
 from models.room import Room
 		
