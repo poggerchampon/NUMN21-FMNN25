@@ -2,14 +2,18 @@ import numpy as np
 from mpi4py import MPI
 
 from src.solver.laplace_solver import solve_laplace
-from src.utilities.constants import omega, dx, num_iter, u_normal, u_heater, u_window
-from src.models.room import Room
+from src.utilities.constants import u_normal, u_heater, u_window
 
 class DirichletNeumannSolver:
-	def __init__(self, rooms, comm, rank):
+	def __init__(self, rooms, comm, rank, num_iter=10, omega=0.8, dx=1/20):
 		self.rooms = rooms
 		self.comm = comm
 		self.rank = rank
+		
+		#parameters
+		self.num_iter = num_iter
+		self.omega = omega
+		self.dx = dx
 		
 	def solve(self):
 		"""
@@ -25,7 +29,7 @@ class DirichletNeumannSolver:
 		"""
 		u_dict = {i: room.temperature for i, room in enumerate(self.rooms)}
 		
-		for k in range(num_iter):
+		for k in range(self.num_iter):
 			for i, room in enumerate(self.rooms):
 				if self.rank == i:
 					u = u_dict[i]
@@ -33,8 +37,8 @@ class DirichletNeumannSolver:
 					self.send_conditions(u, adjacent_rooms)
 					u = self.receive_and_update_conditions(u, adjacent_rooms)
 					
-					u_new = solve_laplace(u)
-					u_dict[i] = omega * u_new + (1 - omega) * u
+					u_new = solve_laplace(u, self.dx)
+					u_dict[i] = self.omega * u_new + (1 - self.omega) * u
 					
 		return u_dict
 	
@@ -78,10 +82,10 @@ class DirichletNeumannSolver:
 			
 	def update_neumann(self, u, u_received, direction):
 		if direction == "right":
-			flux = (u[:, -2] - u[:, -1]) * dx
-			u[:, -1] = u[:, -2] - dx * flux
+			flux = (u[:, -2] - u[:, -1]) * self.dx
+			u[:, -1] = u[:, -2] - self.dx * flux
 		elif direction == "left":
-			flux = (u[:, 1] - u[:, 0]) * dx
-			u[:, 0] = u[:, 1] - dx * flux
+			flux = (u[:, 1] - u[:, 0]) * self.dx
+			u[:, 0] = u[:, 1] - self.dx * flux
 			
 		return u
