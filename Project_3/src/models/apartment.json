@@ -3,17 +3,17 @@
         { 
             "dimensions": [21, 21],
             "boundary_conditions": {"left": "u_heater"},
-            "adjacent_rooms": {"right": 1}
+            "adjacent_rooms": {"right": {"rank": 1, "type": "Neumann"}}
         },
         {
             "dimensions": [41, 21],
             "boundary_conditions": {"top": "u_heater", "bottom": "u_window"},
-            "adjacent_rooms": {"left": 0, "right": 2}
+            "adjacent_rooms": {"left": {"rank": 0, "type": "Neumann"}, "right": {"rank": 2, "type": "Dirichlet"}}
         },
         {
             "dimensions": [21, 21],
             "boundary_conditions": {"right": "u_heater"},
-            "adjacent_rooms": {"left": 1}
+            "adjacent_rooms": {"left": {"rank": 1, "type": "Neumann"}}
         }
     ]
 }
