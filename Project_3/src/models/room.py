@@ -9,7 +9,10 @@ class Room:
         self.adjacent_rooms = adjacent_rooms if adjacent_rooms else {} # dictionary of adjacent room numbers
         self.temperature = np.full(self.dimensions, u_normal)
         
-        self.constant_mapping = {'u_heater': u_heater, 'u_window': u_window, 'u_normal': u_normal} # Mapping of string identifiers to actual values
+        self.constant_mapping = {'u_heater': u_heater, 'u_window': u_window, 'u_normal': u_normal} # Mapping of string 
+        
+        # set the boundary conditions
+        self.set_boundary_conditions()
 
     def set_boundary_conditions(self):
         # Apply the boundary conditions
