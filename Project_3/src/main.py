@@ -25,19 +25,34 @@ def set_boundary_conditions(u, rank):
 def dirichlet_neumann_iteration(u, comm, rank):
 	# Dirichlet-Neumann Iteration
 	for k in range(num_iter):
-		u = solve_laplace(u)
-		
 		if rank == 1:
 			comm.send(u[:, 0], dest=0, tag=11)
 			comm.send(u[:, -1], dest=2, tag=12)
 		elif rank == 0:
+			# Receive Dirichlet conditions from room 2
 			u_k1_2 = comm.recv(source=1, tag=11)
-			u[:, -1] = u_k1_2[0]  # Update right wall room 1 with Dirichlet conditions from room 2
-		else:
-			u_k1_2 = comm.recv(source=1, tag=12)
-			u[:, 0] = u_k1_2[0]  # Update left wall room 3 with Dirichlet conditions from room 2
 			
-	return u
+			# Update right wall of room 1 with Dirichlet conditions from room 2
+			u[:, -1] = u_k1_2[0]
+			
+			# Calculate flux for Neumann condition
+			flux = (u[:, -2] - u[:, -1]) * dx
+			u[:, -1] = u[:, -2] - dx * flux
+		else:
+			# Receive Dirichlet conditions from room 2
+			u_k1_2 = comm.recv(source=1, tag=12)
+			
+			# Update left wall of room 3 with Dirichlet conditions from room 2
+			u[:, 0] = u_k1_2[0]
+			
+			# Calculate flux for Neumann condition
+			flux = (u[:, 1] - u[:, 0]) * dx
+			u[:, 0] = u[:, 1] - dx * flux
+
+		u_new = solve_laplace(u)
+		u_new = omega * u_new + (1 - omega) * u # relaxation
+			
+	return u_new
 
 def output_results(u, rank):
 	room_number = rank + 1
