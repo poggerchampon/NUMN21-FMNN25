@@ -25,8 +25,8 @@ def _initialise_equation_system(u, n, m, dx):
 		for j in range(m):
 			idx = i * m + j
 			if i == 0 or i == n - 1 or j == 0 or j == m - 1:
-				A[idx, idx] = 1
-				b[idx] = u[i, j] # boundary condition
+				A[idx, idx] = 1 / dx**2
+				b[idx] = u[i, j] / dx**2
 			else:
 				A[idx, idx] = -4 / dx**2
 				A[idx, idx + 1] = 1 / dx**2
