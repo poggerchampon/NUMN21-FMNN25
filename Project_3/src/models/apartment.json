@@ -8,7 +8,7 @@
         {
             "dimensions": [41, 21],
             "boundary_conditions": {"top": "u_heater", "bottom": "u_window"},
-            "adjacent_rooms": {"left": {"rank": 0, "type": "Neumann"}, "right": {"rank": 2, "type": "Dirichlet"}}
+            "adjacent_rooms": {"left": {"rank": 0, "type": "Dirichlet"}, "right": {"rank": 2, "type": "Dirichlet"}}
         },
         {
             "dimensions": [21, 21],
