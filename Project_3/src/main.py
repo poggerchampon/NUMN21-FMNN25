@@ -4,7 +4,6 @@ import numpy as np
 from solver.dirichlet_neumann_solver import DirichletNeumannSolver
 from utilities.plot_temperature import plot_temperature
 from models.load_apartment import load_apartment_layout
-from models.room import Room
 		
 def output_results(u_dic, rank):
 	room_number = rank + 1
@@ -15,7 +14,7 @@ def main():
 	comm = MPI.COMM_WORLD
 	rank = comm.Get_rank()
 	
-	# Load apartment layout with conditions
+	# Load apartment layout with conditions set
 	rooms = load_apartment_layout(filename="models/apartment.json")
 	
 	# Solve using DirichletNeumann method
@@ -30,3 +29,14 @@ def main():
 	
 if __name__ == "__main__":
 	main()
+	
+"""
+Running the program:
+----------------------
+Navigate to dir containing main.py and run:
+	
+	mpirun -np 3 python3 -B main.py
+
+If module error, run:
+	PYTHONPATH="/path/to/Project_3" mpirun -np 3 python3 -B main.py
+"""
