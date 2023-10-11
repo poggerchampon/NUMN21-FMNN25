@@ -26,17 +26,22 @@ class DirichletNeumannSolver:
 		Returns:
 		- u_dict: Dictionary of updated temperatures for each room
 		"""
-		u_dict = {i: room.temperature for i, room in enumerate(self.rooms)}
+		u_dict = {i: room.temperature for i, room in enumerate(self.rooms)} # initialise u_dict
 		
 		for k in range(self.num_iter):
 			for i, room in enumerate(self.rooms):
 				if self.rank == i:
 					u = u_dict[i]
 					adjacent_rooms = room.adjacent_rooms
+					
+					# Send the conditions to the adjacent rooms and collect their conditions
 					self.send_conditions(u, adjacent_rooms)
 					u = self.receive_and_update_conditions(u, adjacent_rooms)
 					
+					# Solve laplace equation with the updated conditions
 					u_new = solve_laplace(u, self.dx)
+					
+					# Relaxation
 					u_dict[i] = self.omega * u_new + (1 - self.omega) * u
 					
 		return u_dict
@@ -91,5 +96,4 @@ class DirichletNeumannSolver:
 		elif direction == "left":
 			g = (u[:, 1] - u[:, 0]) / self.dx  # Compute Neumann condition using first-order differences
 			u[:, 0] = u[:, 1] - self.dx * (g - u_received_interpolated)
-			
 		return u
