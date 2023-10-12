@@ -1,5 +1,6 @@
 import numpy as np
-from scipy.linalg import solve
+import scipy.sparse as sp
+#from scipy.linalg import solve
 
 def _initialise_equation_system(u, n, m, dx):
 	"""
@@ -18,23 +19,36 @@ def _initialise_equation_system(u, n, m, dx):
 	'A' : A 2D numpy array representing the cofficients of the unkowns
 	'b' : A 1D numpy array representing the constants
 	"""
-	A = np.zeros((n * m, n * m))
-	b = np.zeros(n * m)
 	
+	data = []
+	diags = []
+	
+	main_diag = np.zeros(n * m)
+	left_diag = np.zeros(n * m - 1)
+	right_diag = np.zeros(n * m - 1)
+	upper_diag = np.zeros(n * m - m)
+	lower_diag = np.zeros(n * m - m)
+	
+	b = np.zeros(n * m)
+	# Will change this ugly creation of b, A works now at least
 	for i in range(n):
 		for j in range(m):
 			idx = i * m + j
 			if i == 0 or i == n - 1 or j == 0 or j == m - 1:
-				A[idx, idx] = 1 / dx**2
+				main_diag[idx] = 1 / dx**2
 				b[idx] = u[i, j] / dx**2
 			else:
-				A[idx, idx] = -4 / dx**2
-				A[idx, idx + 1] = 1 / dx**2
-				A[idx, idx - 1] = 1 / dx**2
-				A[idx, idx + m] = 1 / dx**2
-				A[idx, idx - m] = 1 / dx**2
-				b[idx] = 0
-			
+				main_diag[idx] = -4 / dx**2
+				left_diag[idx - 1] = 1 / dx**2
+				right_diag[idx] = 1 / dx**2
+				upper_diag[idx] = 1 / dx**2 if idx + m < n * m else 0
+				lower_diag[idx - m] = 1 / dx**2
+				
+	data = [lower_diag, left_diag, main_diag, right_diag, upper_diag]
+	diags = [-m, -1, 0, 1, m]
+	
+	A = sp.diags(data, diags, shape=(n * m, n * m), format='csr')
+	
 	return A, b
 
 def solve_laplace(u, dx):
@@ -52,7 +66,6 @@ def solve_laplace(u, dx):
 	n = u.shape[0]
 	m = u.shape[1]
 	
-	A, b = _initialise_equation_system(u, n, m, dx)
-				
-	u_new = solve(A, b).reshape((n, m))
+	A, b = initialise_equation_system_sparse(u, n, m, dx)
+	u_new = sp.linalg.spsolve(A, b).reshape((n, m))
 	return u_new
