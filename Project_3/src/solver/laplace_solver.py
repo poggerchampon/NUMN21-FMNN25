@@ -18,39 +18,34 @@ def _initialise_equation_system_sparse(u, n, m, dx):
 	'A' : A 2D sparse matrix representing the coefficients of the unknowns
 	'b' : A 1D numpy array representing the constants
 	"""
-	main_diag = np.zeros(n * m)
-	left_diag = np.zeros(n * m - 1)
-	right_diag = np.zeros(n * m - 1)
-	upper_diag = np.zeros(n * m - m)
-	lower_diag = np.zeros(n * m - m)
+	N = n * m
+	coeff = 1 / dx**2
 	
-	b = np.zeros(n * m)
+	main_diag = np.zeros(N)
+	left_diag, right_diag = np.zeros(N - 1), np.zeros(N - 1)
+	upper_diag, lower_diag = np.zeros(N - m), np.zeros(N - m)
 	
-	# Indices for boundary conditions
-	boundary_indices = np.concatenate([
-		np.arange(0, m),  # Top boundary
-		np.arange((n-1) * m, n * m),  # Bottom boundary
-		np.arange(0, n * m, m),  # Left boundary
-		np.arange(m-1, n * m, m)  # Right boundary
-	])
+	b = np.zeros(N)
 	
-	# Boundary conditions
-	main_diag[boundary_indices] = 1 / dx**2
-	b[boundary_indices] = u.flatten()[boundary_indices] / dx**2
+	# Boundary indices
+	top, bottom = np.arange(m), np.arange((n-1)*m, N)
+	left, right = np.arange(0, N, m), np.arange(m-1, N, m)
+	boundary_indices = np.concatenate([top, bottom, left, right])
+	
+	main_diag[boundary_indices] = coeff
+	b[boundary_indices] = u.flatten()[boundary_indices] * coeff
 	
 	# Mask for interior points, we don't want to overwrite the boundary conditions
 	interior_mask = np.ones((n, m), dtype=bool)
 	interior_mask[np.unravel_index(boundary_indices, (n, m))] = 0
-	
-	# Interior indices
-	interior_indices = np.arange(n * m).reshape(n, m)[interior_mask].flatten()
+	interior_indices = np.arange(N).reshape(n, m)[interior_mask].flatten()
 	
 	# Set up A interior
-	main_diag[interior_indices] = -4 / dx**2
-	left_diag[interior_indices - 1] = 1 / dx**2
-	right_diag[interior_indices] = 1 / dx**2
-	upper_diag[interior_indices] = 1 / dx**2
-	lower_diag[interior_indices - m] = 1 / dx**2
+	main_diag[interior_indices] = -4 * coeff
+	left_diag[interior_indices - 1] = coeff
+	right_diag[interior_indices] = coeff
+	upper_diag[interior_indices] = coeff
+	lower_diag[interior_indices - m] = coeff
 				
 	data = [lower_diag, left_diag, main_diag, right_diag, upper_diag]
 	diags = [-m, -1, 0, 1, m]
