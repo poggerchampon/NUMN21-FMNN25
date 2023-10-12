@@ -29,7 +29,7 @@ b[::n] = u[:,0]
 # Bottom boundary
 b[n*m-n:] = u[-1,:]
 
-# Upper boundary
+# Top boundary
 b[:n] = u[0,:]
 
 # Right boundary
