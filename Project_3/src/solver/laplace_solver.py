@@ -50,7 +50,7 @@ def _initialise_equation_system_sparse(u, n, m, dx):
 	data = [lower_diag, left_diag, main_diag, right_diag, upper_diag]
 	diags = [-m, -1, 0, 1, m]
 	
-	A = sp.diags(data, diags, shape=(n * m, n * m), format='csr')
+	A = sp.diags(data, diags, shape=(N, N), format='csr')
 	
 	return A, b
 
