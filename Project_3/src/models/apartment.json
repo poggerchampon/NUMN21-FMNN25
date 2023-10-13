@@ -2,18 +2,52 @@
     "rooms": [
         { 
             "dimensions": [21, 21],
-            "boundary_conditions": {"left": "u_heater"},
-            "adjacent_rooms": {"right": {"rank": 1, "type": "Neumann"}}
+            "boundary_conditions": {
+                "left": "u_heater"
+            },
+            "adjacent_rooms": {
+                "right": {
+                    "rank": 1,
+                    "type": "Neumann",
+                    "start_pos": 0,
+                    "end_pos": 21
+                }
+            }
         },
         {
             "dimensions": [41, 21],
-            "boundary_conditions": {"top": "u_heater", "bottom": "u_window"},
-            "adjacent_rooms": {"left": {"rank": 0, "type": "Dirichlet"}, "right": {"rank": 2, "type": "Dirichlet"}}
+            "boundary_conditions": {
+                "top": "u_heater",
+                "bottom": "u_window"
+            },
+            "adjacent_rooms": {
+                "left": {
+                    "rank": 0,
+                    "type": "Dirichlet",
+                    "start_pos": 20,
+                    "end_pos": 41
+                },
+                "right": {
+                    "rank": 2,
+                    "type": "Dirichlet",
+                    "start_pos": 0,
+                    "end_pos": 21
+                }
+            }
         },
         {
             "dimensions": [21, 21],
-            "boundary_conditions": {"right": "u_heater"},
-            "adjacent_rooms": {"left": {"rank": 1, "type": "Neumann"}}
+            "boundary_conditions": {
+                "right": "u_heater"
+            },
+            "adjacent_rooms": {
+                "left": {
+                    "rank": 1,
+                    "type": "Neumann",
+                    "start_pos": 0,
+                    "end_pos": 21
+                }
+            }
         }
     ]
 }
