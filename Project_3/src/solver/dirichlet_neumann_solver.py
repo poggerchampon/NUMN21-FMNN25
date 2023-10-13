@@ -16,10 +16,10 @@ class DirichletNeumannSolver:
 		
 	def solve(self):
 		"""
-		Perform Dirichlet-Neumann iteration for a dictionary of rooms.
+		Perform Dirichlet-Neumann iteration for a list of rooms.
 		
 		Parameters:
-		- rooms: Dictionary of Room objects
+		- rooms: List of Room objects
 		- comm: MPI communicator
 		- rank: MPI rank of the current process
 		
@@ -50,14 +50,16 @@ class DirichletNeumannSolver:
 		# Possible to add top and bottom as well. Current .json layout only has left and right
 		for direction, adj_info in adjacent_rooms.items():
 			adj_rank = adj_info['rank']
+			start_pos = adj_info['start_pos']
+			end_pos = adj_info['end_pos']
 			
 			# Send rightmost boundary if the adjacent room is to the right
 			if direction == "right":
-				self.comm.send(u[:, -1], dest=adj_rank, tag=100 + self.rank)
+				self.comm.send(u[start_pos:end_pos, -1], dest=adj_rank, tag=100 + self.rank)
 				
 			# Send the leftmost boundary if the adjacent room is to the left
 			elif direction == "left":
-				self.comm.send(u[:, 0], dest=adj_rank, tag=100 + self.rank)
+				self.comm.send(u[start_pos:end_pos, 0], dest=adj_rank, tag=100 + self.rank)
 				
 	def receive_and_update_conditions(self, u, adjacent_rooms):
 		for direction, adj_info in adjacent_rooms.items():
@@ -66,34 +68,34 @@ class DirichletNeumannSolver:
 			
 			# Receiving the boundary condition from the adjacent room
 			u_received = self.comm.recv(source=adj_rank, tag=100 + adj_rank)
-			
+
 			# Updating boundary condition based on its type (Dirichlet or Neumann)
 			if adj_type == "Dirichlet":
-				u = self.update_dirichlet(u, u_received, direction)
+				u = self.update_dirichlet(u, u_received, direction, adj_info)
+
 			elif adj_type == "Neumann":
-				u = self.update_neumann(u, u_received, direction)
+				u = self.update_neumann(u, u_received, direction, adj_info)
 				
 		return u
 				
-	def update_dirichlet(self, u, u_received, direction):
-		# Interpolate to avoid mismatched matrices. Not the best practice but the current layout
-		# provides no information about where on the walls adjacent rooms are located
-		u_received_interpolated = interpolate_boundary(u_received, u.shape[0])
-		if direction == "right":
-			u[:, -1] = u_received_interpolated
-		elif direction == "left":
-			u[:, 0] = u_received_interpolated
-		return u
-			
-	def update_neumann(self, u, u_received, direction):
-		# Interpolate to avoid mismatched matrices. Not the best practice but the current layout
-		# provides no information about where on the walls adjacent rooms are located
-		u_received_interpolated = interpolate_boundary(u_received, u.shape[0])
+	def update_dirichlet(self, u, u_received, direction, adj_info):
+		start_pos = adj_info['start_pos']
+		end_pos = adj_info['end_pos']
 		
 		if direction == "right":
-			g = (u[:, -2] - u[:, -1]) / self.dx  # Compute Neumann condition using first-order differences
-			u[:, -1] = u[:, -2] + self.dx * (u_received_interpolated - g)
+			u[start_pos:end_pos, -1] = u_received
 		elif direction == "left":
-			g = (u[:, 1] - u[:, 0]) / self.dx  # Compute Neumann condition using first-order differences
-			u[:, 0] = u[:, 1] - self.dx * (g - u_received_interpolated)
+			u[start_pos:end_pos, 0] = u_received
+		return u
+			
+	def update_neumann(self, u, u_received, direction, adj_info):
+		start_pos = adj_info['start_pos']
+		end_pos = adj_info['end_pos']
+		
+		if direction == "right":
+			g = (u[:, -2] - u[:, -1]) / self.dx  # Compute Neumann condition
+			u[start_pos:end_pos, -1] = u[:, -2] + self.dx * (u_received - g)
+		elif direction == "left":
+			g = (u[:, 1] - u[:, 0]) / self.dx  # Compute Neumann condition
+			u[start_pos:end_pos, 0] = u[:, 1] - self.dx * (g - u_received)
 		return u
